@@ -1,0 +1,78 @@
+{
+    "name": "tommasomusetti/filament-doc-studio",
+    "description": "PDF template builder for end users, inside Filament.",
+    "keywords": [
+        "Tommaso Musetti",
+        "laravel",
+        "filamentphp",
+        "filament",
+        "filament-plugin",
+        "filament-doc-studio"
+    ],
+    "homepage": "https://github.com/TommasoMusetti/doc-studio",
+    "support": {
+        "issues": "https://github.com/TommasoMusetti/doc-studio/issues",
+        "source": "https://github.com/TommasoMusetti/doc-studio"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tommaso Musetti",
+            "email": "musettitommaso@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "dompdf/dompdf": "^3.0",
+        "filament/filament": "^4.0|^5.0",
+        "filament/forms": "^4.0|^5.0",
+        "spatie/laravel-package-tools": "^1.15.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.0",
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "pestphp/pest": "^3.7|^4.0",
+        "pestphp/pest-plugin-arch": "^3.0|^4.0",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0",
+        "rector/rector": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "TommasoMusetti\\DocStudio\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TommasoMusetti\\DocStudio\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "analyse": "phpstan analyse --memory-limit=1G",
+        "lint": "pint",
+        "refactor": "rector",
+        "test": "pest",
+        "test:lint": "pint --test",
+        "test:refactor": "rector --dry-run"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "TommasoMusetti\\DocStudio\\DocStudioServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
