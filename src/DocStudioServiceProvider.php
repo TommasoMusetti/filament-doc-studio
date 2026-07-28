@@ -21,7 +21,7 @@ class DocStudioServiceProvider extends PackageServiceProvider
                 $command
                     ->publishMigrations()
                     ->askToRunMigrations()
-                    ->askToStarRepoOnGitHub('TommasoMusetti/doc-studio');
+                    ->askToStarRepoOnGitHub('TommasoMusetti/filament-doc-studio');
             });
     }
 }

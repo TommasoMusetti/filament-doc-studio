@@ -1,6 +1,6 @@
 # Document Studio
 
-[![Tests](https://img.shields.io/github/actions/workflow/status/TommasoMusetti/doc-studio/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/TommasoMusetti/doc-studio/actions?query=workflow%3Atests+branch%3Amain)
+[![Tests](https://img.shields.io/github/actions/workflow/status/TommasoMusetti/filament-doc-studio/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/TommasoMusetti/filament-doc-studio/actions?query=workflow%3Atests+branch%3Amain)
 [![License](https://img.shields.io/packagist/l/tommasomusetti/filament-doc-studio.svg?style=flat-square)](LICENSE.md)
 
 A PDF template builder for end users, inside Filament. Your client drags blocks

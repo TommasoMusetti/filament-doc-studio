@@ -9,10 +9,10 @@
         "filament-plugin",
         "filament-doc-studio"
     ],
-    "homepage": "https://github.com/TommasoMusetti/doc-studio",
+    "homepage": "https://github.com/TommasoMusetti/filament-doc-studio",
     "support": {
-        "issues": "https://github.com/TommasoMusetti/doc-studio/issues",
-        "source": "https://github.com/TommasoMusetti/doc-studio"
+        "issues": "https://github.com/TommasoMusetti/filament-doc-studio/issues",
+        "source": "https://github.com/TommasoMusetti/filament-doc-studio"
     },
     "license": "MIT",
     "authors": [
