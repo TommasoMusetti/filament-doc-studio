@@ -16,13 +16,39 @@ class DocumentRenderer
      * Blocks this renderer knows how to turn into HTML.
      *
      * Deliberately not read from the Filament plugin: documents are rendered
-     * from queued jobs and commands too, where no panel is booted.
+     * from queued jobs and commands too, where no panel is booted. A panel
+     * offers a subset of this list, never the other way round — disabling a
+     * block in the editor must not break documents already saved with it.
      *
      * @var array<class-string<DocumentBlock>>
      */
-    protected const BLOCKS = [
+    protected array $blocks = [
         HeadingBlock::class,
     ];
+
+    /**
+     * @param  class-string<DocumentBlock>  ...$blocks
+     */
+    public function register(string ...$blocks): static
+    {
+        foreach ($blocks as $block) {
+            if (! is_subclass_of($block, DocumentBlock::class)) {
+                throw new InvalidArgumentException("[{$block}] is not a " . DocumentBlock::class . '.');
+            }
+        }
+
+        $this->blocks = array_values(array_unique([...$this->blocks, ...$blocks]));
+
+        return $this;
+    }
+
+    /**
+     * @return array<class-string<DocumentBlock>>
+     */
+    public function blocks(): array
+    {
+        return $this->blocks;
+    }
 
     public function html(DocumentTemplate $template, ?RenderContext $context = null): string
     {
@@ -71,7 +97,7 @@ class DocumentRenderer
      */
     protected function blockClass(?string $type): string
     {
-        foreach (static::BLOCKS as $class) {
+        foreach ($this->blocks as $class) {
             if ($class::name() === $type) {
                 return $class;
             }

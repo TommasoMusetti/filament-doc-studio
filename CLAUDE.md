@@ -49,6 +49,12 @@ Editor (Builder field) → blocks JSON → DocumentRenderer → HTML + print CSS
   il DB non può validare. Ogni `render()` fa default e clamp sui propri valori.
 - **dompdf-first**: niente flexbox o grid nelle viste di stampa, layout a `<table>`
   e CSS conservativo.
+- **plugin ⊆ renderer**: l'elenco dei blocchi renderizzabili sta sul
+  `DocumentRenderer` (singleton); un pannello può solo **restringerlo**, mai
+  ampliarlo, e fallisce al boot se ne offre uno sconosciuto. Motivo: disattivare
+  un blocco nell'editor non deve rompere i documenti già salvati che lo usano.
+  Un'app che ospita il plugin aggiunge blocchi propri con
+  `app(DocumentRenderer::class)->register(SuoBlocco::class)`.
 - Le migration si distribuiscono come `.php.stub`, mai come `.php`.
 
 ## Scope v1 — chiuso

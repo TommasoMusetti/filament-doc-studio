@@ -24,4 +24,11 @@ class DocStudioServiceProvider extends PackageServiceProvider
                     ->askToStarRepoOnGitHub('TommasoMusetti/filament-doc-studio');
             });
     }
+
+    public function packageRegistered(): void
+    {
+        // Shared instance, or a block registered by the host app would be
+        // written to a throwaway renderer and lost.
+        $this->app->singleton(DocumentRenderer::class);
+    }
 }
