@@ -1,27 +1,11 @@
 <?php
 
-use Filament\Forms\Components\Builder\Block;
-use Filament\Forms\Components\TextInput;
 use Filament\Panel;
-use TommasoMusetti\DocStudio\Blocks\DocumentBlock;
 use TommasoMusetti\DocStudio\Blocks\HeadingBlock;
 use TommasoMusetti\DocStudio\DocStudioPlugin;
 use TommasoMusetti\DocStudio\DocumentRenderer;
 use TommasoMusetti\DocStudio\Models\DocumentTemplate;
-use TommasoMusetti\DocStudio\RenderContext;
-
-class StampBlock extends DocumentBlock
-{
-    public static function make(): Block
-    {
-        return Block::make('stamp')->schema([TextInput::make('text')]);
-    }
-
-    public function render(array $data, RenderContext $context): string
-    {
-        return '<p class="stamp">' . e($data['text'] ?? '') . '</p>';
-    }
-}
+use TommasoMusetti\DocStudio\Tests\Fixtures\StampBlock;
 
 class NotABlock {}
 
