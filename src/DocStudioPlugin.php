@@ -6,6 +6,7 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use LogicException;
 use TommasoMusetti\DocStudio\Blocks\DocumentBlock;
+use TommasoMusetti\DocStudio\Resources\DocumentTemplateResource;
 
 class DocStudioPlugin implements Plugin
 {
@@ -59,6 +60,10 @@ class DocStudioPlugin implements Plugin
                 "[{$panel->getId()}] would offer a block that cannot be rendered."
             );
         }
+
+        $panel->resources([
+            DocumentTemplateResource::class,
+        ]);
     }
 
     public function boot(Panel $panel): void
