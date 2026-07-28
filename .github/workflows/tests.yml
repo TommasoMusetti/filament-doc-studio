@@ -28,10 +28,11 @@ jobs:
             laravel: 12.*
             testbench: 10.*
             stability: prefer-stable
-          # Is the "^4.0|^5.0" claim true? This one installs Filament 4.0.0.
-          - php: 8.2
-            laravel: 11.*
-            testbench: 9.*
+          # Is the "^4.0|^5.0" claim true? This one resolves down to Filament v4.
+          # Laravel 12 is the floor because workbench needs testbench 10+.
+          - php: 8.3
+            laravel: 12.*
+            testbench: 10.*
             stability: prefer-lowest
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}

@@ -56,6 +56,10 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app): void
     {
         $app['config']->set('database.default', 'testing');
+
+        // Filament renders encrypted sessions and cookies. A local workbench
+        // has a key in its .env; a clean checkout has nothing.
+        $app['config']->set('app.key', 'base64:' . base64_encode(random_bytes(32)));
     }
 
     protected function defineDatabaseMigrations(): void
