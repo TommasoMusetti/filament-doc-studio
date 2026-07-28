@@ -27,6 +27,24 @@ composer analyse   # phpstan (serve --memory-limit=1G, già nello script)
 composer lint      # pint
 ```
 
+### Vederlo nel browser (workbench)
+
+`workbench/` è una mini app Laravel con un pannello Filament vero, servita da
+testbench. Non fa parte del rilascio (esclusa via `.gitattributes`), esiste solo
+per sviluppare e per i test del pannello.
+
+```bash
+php vendor/bin/testbench workbench:build                                    # sqlite + migration + asset Filament
+php vendor/bin/testbench db:seed --class='Workbench\Database\Seeders\DatabaseSeeder'
+php vendor/bin/testbench serve                                              # http://127.0.0.1:8000/admin
+```
+
+Credenziali: `test@example.com` / `password`.
+
+Lo stesso `AdminPanelProvider` è registrato nel `TestCase`, quindi i test in
+`tests/PanelTest.php` girano contro il pannello che apri nel browser — non
+contro una sua imitazione.
+
 ## Architettura
 
 ```

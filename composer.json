@@ -46,17 +46,32 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "TommasoMusetti\\DocStudio\\Tests\\": "tests/"
+            "TommasoMusetti\\DocStudio\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "scripts": {
-        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare",
+            "@php ./vendor/bin/testbench package:discover --ansi"
+        ],
         "analyse": "phpstan analyse --memory-limit=1G",
         "lint": "pint",
         "refactor": "rector",
         "test": "pest",
         "test:lint": "pint --test",
-        "test:refactor": "rector --dry-run"
+        "test:refactor": "rector --dry-run",
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ]
     },
     "extra": {
         "laravel": {

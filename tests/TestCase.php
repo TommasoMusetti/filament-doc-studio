@@ -13,15 +13,18 @@ use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\LivewireServiceProvider;
+use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase as Orchestra;
 use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
 use TommasoMusetti\DocStudio\DocStudioServiceProvider;
+use Workbench\App\Providers\AdminPanelProvider;
 
 class TestCase extends Orchestra
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
+    use WithWorkbench;
 
     protected function getPackageProviders($app)
     {
@@ -40,6 +43,9 @@ class TestCase extends Orchestra
             TablesServiceProvider::class,
             WidgetsServiceProvider::class,
             DocStudioServiceProvider::class,
+            // The same panel `testbench serve` boots, so tests exercise the
+            // plugin through a real Filament panel and not a mock of one.
+            AdminPanelProvider::class,
         ];
 
         sort($providers);
@@ -54,8 +60,12 @@ class TestCase extends Orchestra
 
     protected function defineDatabaseMigrations(): void
     {
-        // Migrations ship as .stub so the host app can own them, which also
-        // means the migrator cannot discover them here.
-        (include __DIR__ . '/../database/migrations/create_document_templates_table.php.stub')->up();
+        // Users, for the panel tests.
+        $this->loadLaravelMigrations();
+
+        // The same migrations the workbench app serves, so tests and browser
+        // share one schema. That folder loads the package's .stub the way a
+        // host app would after publishing it.
+        $this->loadMigrationsFrom(__DIR__ . '/../workbench/database/migrations');
     }
 }
