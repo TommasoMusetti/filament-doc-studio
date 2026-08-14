@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use TommasoMusetti\DocStudio\Blocks\DocumentBlock;
 use TommasoMusetti\DocStudio\Blocks\HeadingBlock;
+use TommasoMusetti\DocStudio\Blocks\ParagraphBlock;
 use TommasoMusetti\DocStudio\Models\DocumentTemplate;
 
 class DocumentRenderer
@@ -24,6 +25,7 @@ class DocumentRenderer
      */
     protected array $blocks = [
         HeadingBlock::class,
+        ParagraphBlock::class,
     ];
 
     /**
