@@ -10,6 +10,7 @@ use TommasoMusetti\DocStudio\Resources\DocumentTemplateResource\Pages\CreateDocu
 use TommasoMusetti\DocStudio\Resources\DocumentTemplateResource\Pages\EditDocumentTemplate;
 use TommasoMusetti\DocStudio\Resources\DocumentTemplateResource\Pages\ListDocumentTemplates;
 use TommasoMusetti\DocStudio\Tests\Fixtures\StampBlock;
+use TommasoMusetti\DocStudio\Tests\Fixtures\TestDataSource;
 use Workbench\App\Models\User;
 
 use function Pest\Laravel\actingAs;
@@ -72,6 +73,26 @@ it('keeps a block the panel stopped offering', function () {
     // was already saved.
     expect(array_column($template->fresh()->blocks, 'type'))->toBe(['heading', 'stamp']);
     expect(substr(app(DocumentRenderer::class)->pdf($template->fresh()), 0, 4))->toBe('%PDF');
+});
+
+it('shows the merge fields the paragraph block picker offers for the template model', function () {
+    app(DocumentRenderer::class)->registerDataSource(TestDataSource::class);
+
+    Livewire::test(CreateDocumentTemplate::class)
+        ->fillForm([
+            'target_model' => User::class,
+            'blocks' => [['type' => 'paragraph', 'data' => ['text' => '']]],
+        ])
+        ->assertSee('Customer name');
+});
+
+it('offers no merge fields when the model has no data source registered', function () {
+    Livewire::test(CreateDocumentTemplate::class)
+        ->fillForm([
+            'target_model' => 'App\\Models\\Unregistered',
+            'blocks' => [['type' => 'paragraph', 'data' => ['text' => '']]],
+        ])
+        ->assertDontSee('Customer name');
 });
 
 it('loads an existing template back into the editor', function () {

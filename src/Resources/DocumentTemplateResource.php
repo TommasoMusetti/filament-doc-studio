@@ -47,6 +47,7 @@ class DocumentTemplateResource extends Resource
                 ->label('Model')
                 ->required()
                 ->maxLength(255)
+                ->live(onBlur: true)
                 ->helperText('The model this template prints, e.g. App\Models\Order.'),
 
             Builder::make('blocks')
