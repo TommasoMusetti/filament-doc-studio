@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use TommasoMusetti\DocStudio\Blocks\DocumentBlock;
 use TommasoMusetti\DocStudio\Blocks\HeadingBlock;
 use TommasoMusetti\DocStudio\Blocks\ParagraphBlock;
+use TommasoMusetti\DocStudio\Contracts\DocumentDataSource;
 use TommasoMusetti\DocStudio\Models\DocumentTemplate;
 
 class DocumentRenderer
@@ -27,6 +28,14 @@ class DocumentRenderer
         HeadingBlock::class,
         ParagraphBlock::class,
     ];
+
+    /**
+     * Data sources this renderer can resolve merge fields against, keyed by
+     * the model class they declare with model().
+     *
+     * @var array<class-string, class-string<DocumentDataSource>>
+     */
+    protected array $dataSources = [];
 
     /**
      * @param  class-string<DocumentBlock>  ...$blocks
@@ -50,6 +59,34 @@ class DocumentRenderer
     public function blocks(): array
     {
         return $this->blocks;
+    }
+
+    /**
+     * @param  class-string<DocumentDataSource>  ...$dataSources
+     */
+    public function registerDataSource(string ...$dataSources): static
+    {
+        foreach ($dataSources as $dataSource) {
+            if (! is_subclass_of($dataSource, DocumentDataSource::class)) {
+                throw new InvalidArgumentException("[{$dataSource}] is not a " . DocumentDataSource::class . '.');
+            }
+        }
+
+        foreach ($dataSources as $dataSource) {
+            $this->dataSources[$dataSource::model()] = $dataSource;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  class-string  $model
+     */
+    public function dataSourceFor(string $model): ?DocumentDataSource
+    {
+        $class = $this->dataSources[$model] ?? null;
+
+        return $class === null ? null : app($class);
     }
 
     public function html(DocumentTemplate $template, ?RenderContext $context = null): string
