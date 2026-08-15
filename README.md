@@ -7,9 +7,11 @@ A PDF template builder for end users, inside Filament. Your client drags blocks
 into a template and prints a record as a PDF — without a developer touching a
 Blade file for every "can you change the quote layout?".
 
+![Building a template: name and model, a paragraph block with a merge field, a table bound to a data source collection, all reflected live in the preview](.github/demo.gif)
+
 > **Work in progress.** The v1 scope (3 blocks, merge fields, a live preview,
-> dompdf) is built end to end. README polish and a demo GIF are what's left
-> before the first tagged release.
+> dompdf) is built end to end. Polish and packaging are what's left before
+> the first tagged release.
 
 ## Status
 
