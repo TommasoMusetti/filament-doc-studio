@@ -1,6 +1,7 @@
 # Document Studio
 
 [![Tests](https://img.shields.io/github/actions/workflow/status/TommasoMusetti/filament-doc-studio/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/TommasoMusetti/filament-doc-studio/actions?query=workflow%3Atests+branch%3Amain)
+[![Latest Version](https://img.shields.io/packagist/v/tommasomusetti/filament-doc-studio?style=flat-square)](https://packagist.org/packages/tommasomusetti/filament-doc-studio)
 [![License](https://img.shields.io/github/license/TommasoMusetti/filament-doc-studio?style=flat-square)](LICENSE.md)
 
 A PDF template builder for end users, inside Filament. Your client drags blocks
@@ -9,9 +10,8 @@ Blade file for every "can you change the quote layout?".
 
 ![Building a template: name and model, a paragraph block with a merge field, a table bound to a data source collection, all reflected live in the preview](.github/demo.gif)
 
-> **Work in progress.** The v1 scope (3 blocks, merge fields, a live preview,
-> dompdf) is built end to end. Polish and packaging are what's left before
-> the first tagged release.
+> **v1.0.0.** The full v1 scope is out: 3 blocks, merge fields, a live
+> preview, dompdf rendering. Feedback and issues are welcome.
 
 ## Status
 
