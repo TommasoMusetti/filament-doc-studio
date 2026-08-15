@@ -127,8 +127,8 @@ class DocumentTemplateResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('slug')->searchable(),
-                TextColumn::make('target_model')->label('Model')->toggleable(),
+                TextColumn::make('slug')->searchable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('target_model')->label('Model')->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')->dateTime()->sortable(),
             ])
             ->recordActions([
