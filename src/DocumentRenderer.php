@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use TommasoMusetti\DocStudio\Blocks\DocumentBlock;
 use TommasoMusetti\DocStudio\Blocks\HeadingBlock;
 use TommasoMusetti\DocStudio\Blocks\ParagraphBlock;
+use TommasoMusetti\DocStudio\Blocks\TableBlock;
 use TommasoMusetti\DocStudio\Contracts\DocumentDataSource;
 use TommasoMusetti\DocStudio\Models\DocumentTemplate;
 
@@ -27,6 +28,7 @@ class DocumentRenderer
     protected array $blocks = [
         HeadingBlock::class,
         ParagraphBlock::class,
+        TableBlock::class,
     ];
 
     /**
@@ -91,7 +93,7 @@ class DocumentRenderer
 
     public function html(DocumentTemplate $template, ?RenderContext $context = null): string
     {
-        $context ??= new RenderContext;
+        $context ??= new RenderContext(dataSource: $this->dataSourceFor($template->target_model ?? ''));
 
         $body = collect($template->blocks ?? [])
             ->map(fn (array $block): string => $this->renderBlock($block, $context))

@@ -37,4 +37,35 @@ class RenderContext
 
         return (string) ($field['resolver'])($this->record);
     }
+
+    /**
+     * Resolves a collection key against the current record.
+     *
+     * Column labels are static per data source, not per record: they still
+     * come back with no record in context (e.g. rendering outside a
+     * specific print run), so a table at least shows its headers. Rows are
+     * the part that genuinely needs a record. Same never-throws contract as
+     * resolveField() otherwise: an unknown key or a missing data source just
+     * mean an empty table rather than a broken document.
+     *
+     * @return array{columns: array<string, string>, rows: array<int, array<string, mixed>>}
+     */
+    public function resolveCollection(string $key): array
+    {
+        $collection = $this->dataSource?->collections()[$key] ?? null;
+
+        if ($collection === null) {
+            return ['columns' => [], 'rows' => []];
+        }
+
+        if ($this->record === null) {
+            return ['columns' => $collection['columns'], 'rows' => []];
+        }
+
+        $rows = collect(($collection['resolver'])($this->record))
+            ->map(fn (mixed $row): array => (array) $row)
+            ->all();
+
+        return ['columns' => $collection['columns'], 'rows' => $rows];
+    }
 }

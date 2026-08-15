@@ -32,7 +32,18 @@ class UserDataSource implements DocumentDataSource
 
     public function collections(): array
     {
-        return [];
+        return [
+            'purchases' => [
+                'label' => 'Purchases',
+                'columns' => ['item' => 'Item', 'amount' => 'Amount'],
+                // A demo workbench fixture: a real data source would query
+                // a relation on $user instead of returning static rows.
+                'resolver' => fn (User $user): array => [
+                    ['item' => 'Analytical Engine', 'amount' => '£1,200.00'],
+                    ['item' => 'Punched Cards (x500)', 'amount' => '£12.50'],
+                ],
+            ],
+        ];
     }
 
     public function sample(): User

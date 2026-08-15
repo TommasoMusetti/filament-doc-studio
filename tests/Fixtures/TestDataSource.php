@@ -27,7 +27,16 @@ class TestDataSource implements DocumentDataSource
 
     public function collections(): array
     {
-        return [];
+        return [
+            'items' => [
+                'label' => 'Line items',
+                'columns' => ['name' => 'Item', 'qty' => 'Qty'],
+                'resolver' => fn (User $user): array => [
+                    ['name' => 'Widget', 'qty' => 2],
+                    ['name' => 'Gadget', 'qty' => 1],
+                ],
+            ],
+        ];
     }
 
     public function sample(): User

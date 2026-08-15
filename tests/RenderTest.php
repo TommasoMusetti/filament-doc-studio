@@ -2,6 +2,8 @@
 
 use TommasoMusetti\DocStudio\Blocks\HeadingBlock;
 use TommasoMusetti\DocStudio\Blocks\ParagraphBlock;
+use TommasoMusetti\DocStudio\Blocks\TableBlock;
+use TommasoMusetti\DocStudio\Contracts\DocumentDataSource;
 use TommasoMusetti\DocStudio\DocumentRenderer;
 use TommasoMusetti\DocStudio\Models\DocumentTemplate;
 use TommasoMusetti\DocStudio\RenderContext;
@@ -130,6 +132,123 @@ it('blanks a merge field when there is no data source at all', function () {
 
 it('names the paragraph block the same on both ends of the walk', function () {
     expect(ParagraphBlock::name())->toBe('paragraph');
+});
+
+it('names the table block the same on both ends of the walk', function () {
+    expect(TableBlock::name())->toBe('table');
+});
+
+it('renders a table with the selected columns, in data source order', function () {
+    $context = new RenderContext(
+        record: new User(['name' => 'Ann']),
+        dataSource: new TestDataSource,
+    );
+
+    $html = render([
+        ['type' => 'table', 'data' => ['collection' => 'items', 'columns' => ['qty', 'name']]],
+    ], $context);
+
+    expect($html)
+        ->toContain('<th')->toContain('>Item<')->toContain('>Qty<')
+        ->toContain('>Widget<')->toContain('>2<')
+        ->toContain('>Gadget<')->toContain('>1<');
+
+    // 'name' comes before 'qty' in TestDataSource, even though 'columns' asked for qty first.
+    expect(strpos($html, '>Item<'))->toBeLessThan(strpos($html, '>Qty<'));
+});
+
+it('renders only the columns picked in the editor', function () {
+    $context = new RenderContext(
+        record: new User(['name' => 'Ann']),
+        dataSource: new TestDataSource,
+    );
+
+    $html = render([
+        ['type' => 'table', 'data' => ['collection' => 'items', 'columns' => ['name']]],
+    ], $context);
+
+    expect($html)->toContain('>Item<')->not->toContain('>Qty<');
+});
+
+it('escapes a resolved table cell', function () {
+    $context = new RenderContext(
+        record: new User(['name' => 'Ann']),
+        dataSource: new class implements DocumentDataSource
+        {
+            public static function model(): string
+            {
+                return User::class;
+            }
+
+            public function fields(): array
+            {
+                return [];
+            }
+
+            public function collections(): array
+            {
+                return [
+                    'items' => [
+                        'label' => 'Line items',
+                        'columns' => ['name' => 'Item'],
+                        'resolver' => fn (User $user): array => [['name' => '<b>Widget</b>']],
+                    ],
+                ];
+            }
+
+            public function sample(): User
+            {
+                return new User(['name' => 'Ann']);
+            }
+        },
+    );
+
+    $html = render([
+        ['type' => 'table', 'data' => ['collection' => 'items', 'columns' => ['name']]],
+    ], $context);
+
+    expect($html)
+        ->toContain('&lt;b&gt;Widget&lt;/b&gt;')
+        ->not->toContain('<b>Widget</b>');
+});
+
+it('renders an empty table when there is no data source at all', function () {
+    $html = render([
+        ['type' => 'table', 'data' => ['collection' => 'items', 'columns' => ['name']]],
+    ]);
+
+    expect($html)->toContain('<table')->not->toContain('<td');
+});
+
+it('shows table headers even with no explicit context, since a template already names its target model', function () {
+    app(DocumentRenderer::class)->registerDataSource(TestDataSource::class);
+
+    $html = app(DocumentRenderer::class)->html(new DocumentTemplate([
+        'name' => 'Welcome letter',
+        'slug' => 'welcome-letter',
+        'target_model' => User::class,
+        'blocks' => [
+            ['type' => 'table', 'data' => ['collection' => 'items', 'columns' => ['name', 'qty']]],
+        ],
+        'page_settings' => [],
+    ]));
+
+    expect($html)
+        ->toContain('>Item<')->toContain('>Qty<')
+        ->not->toContain('<td');
+});
+
+it('renders an empty table for a collection the data source no longer offers', function () {
+    $context = new RenderContext(
+        record: new User(['name' => 'Ann']),
+        dataSource: new TestDataSource,
+    );
+
+    $html = render([
+        ['type' => 'table', 'data' => ['collection' => 'removed', 'columns' => ['name']]],
+    ], $context);
+
+    expect($html)->toContain('<table')->not->toContain('<td');
 });
 
 it('stores blocks as json and reads them back as an array', function () {
