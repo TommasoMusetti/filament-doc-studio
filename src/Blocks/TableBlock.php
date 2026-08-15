@@ -29,7 +29,8 @@ class TableBlock extends DocumentBlock
                     ->label('Columns')
                     ->options(fn (Get $get): array => static::columnOptions($get))
                     ->visible(fn (Get $get): bool => filled($get('collection')))
-                    ->required(),
+                    ->required()
+                    ->live(),
             ]);
     }
 

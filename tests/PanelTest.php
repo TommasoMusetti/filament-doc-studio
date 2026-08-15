@@ -95,6 +95,23 @@ it('offers no merge fields when the model has no data source registered', functi
         ->assertDontSee('Customer name');
 });
 
+it('previews the unsaved form state against the sample record', function () {
+    app(DocumentRenderer::class)->registerDataSource(TestDataSource::class);
+
+    Livewire::test(CreateDocumentTemplate::class)
+        ->fillForm([
+            'target_model' => User::class,
+            'blocks' => [['type' => 'paragraph', 'data' => ['text' => 'Dear {{field:customer_name}},']]],
+        ])
+        ->assertSee('Dear Sample Customer,');
+});
+
+it('shows a hint instead of a preview when there is no model to sample from', function () {
+    Livewire::test(CreateDocumentTemplate::class)
+        ->fillForm(['target_model' => '', 'blocks' => []])
+        ->assertSee('Set a model above to preview a sample document.');
+});
+
 it('loads an existing template back into the editor', function () {
     $template = DocumentTemplate::create([
         'name' => 'Quote',

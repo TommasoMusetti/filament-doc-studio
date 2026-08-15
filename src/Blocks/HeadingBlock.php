@@ -18,7 +18,8 @@ class HeadingBlock extends DocumentBlock
                 TextInput::make('text')
                     ->label('Text')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->live(onBlur: true),
                 Select::make('level')
                     ->label('Level')
                     ->options([
@@ -27,7 +28,8 @@ class HeadingBlock extends DocumentBlock
                         3 => 'Subsection',
                     ])
                     ->default(1)
-                    ->required(),
+                    ->required()
+                    ->live(),
             ]);
     }
 

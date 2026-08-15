@@ -32,7 +32,8 @@ class ParagraphBlock extends DocumentBlock
                     Textarea::make('text')
                         ->label('Text')
                         ->required()
-                        ->rows(4),
+                        ->rows(4)
+                        ->live(onBlur: true),
                     View::make('doc-studio::forms.merge-tag-picker')
                         ->viewData(fn (Get $get): array => ['fields' => static::mergeFields($get)]),
                 ])->extraAttributes(['class' => 'fi-doc-studio-merge-tag-group']),
