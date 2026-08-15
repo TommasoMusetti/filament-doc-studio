@@ -7,16 +7,18 @@ A PDF template builder for end users, inside Filament. Your client drags blocks
 into a template and prints a record as a PDF — without a developer touching a
 Blade file for every "can you change the quote layout?".
 
-> **Work in progress.** The editor and the PDF pipeline are connected end to
-> end, with one block. Merge fields and the line item table are next.
+> **Work in progress.** The v1 scope (3 blocks, merge fields, a live preview,
+> dompdf) is built end to end. README polish and a demo GIF are what's left
+> before the first tagged release.
 
 ## Status
 
 | | |
 |---|---|
 | Editor | Filament Builder field, inside your panel |
-| Blocks | heading |
-| Merge fields | not yet |
+| Blocks | heading, paragraph (with merge fields), table (line items) |
+| Merge fields | yes — a whitelist you declare per model |
+| Preview | live, next to the editor, rendered against a sample record |
 | Engine | dompdf (pure PHP, nothing to install on the server) |
 
 ## Installation
@@ -63,6 +65,62 @@ $pdf = app(DocumentRenderer::class)->pdf($template); // raw PDF bytes
 
 The renderer never touches Filament, so this works from a queued job or a
 console command as well as from a panel.
+
+## Whitelisting merge fields and line item tables
+
+The paragraph and table blocks pull data from a model, but only through a
+`DocumentDataSource` you write — a template can never reach an Eloquent
+attribute you didn't explicitly expose:
+
+```php
+use TommasoMusetti\DocStudio\Contracts\DocumentDataSource;
+
+class OrderDataSource implements DocumentDataSource
+{
+    public static function model(): string
+    {
+        return Order::class;
+    }
+
+    public function fields(): array
+    {
+        return [
+            'customer_name' => [
+                'label' => 'Customer name',
+                'resolver' => fn (Order $order): string => $order->customer->name,
+            ],
+        ];
+    }
+
+    public function collections(): array
+    {
+        return [
+            'line_items' => [
+                'label' => 'Line items',
+                'columns' => ['name' => 'Item', 'qty' => 'Qty'],
+                'resolver' => fn (Order $order): iterable => $order->lines
+                    ->map(fn ($line) => ['name' => $line->name, 'qty' => $line->qty]),
+            ],
+        ];
+    }
+
+    public function sample(): Order
+    {
+        // The record the live preview renders against while editing.
+        return Order::query()->latest()->first() ?? new Order(['id' => 0]);
+    }
+}
+```
+
+Register it once, in a service provider's `boot()`:
+
+```php
+app(DocumentRenderer::class)->registerDataSource(OrderDataSource::class);
+```
+
+The paragraph block's merge tag picker and the table block's collection
+picker both read this whitelist — a field or column disappears from the
+editor the moment you stop declaring it, without touching saved templates.
 
 ## Restricting the blocks a panel offers
 
