@@ -4,7 +4,8 @@ Plugin Filament pubblico (MIT): template builder PDF per utenti finali.
 Pacchetto Packagist: `tommasomusetti/filament-doc-studio` — **nome deciso, non
 modificabile dopo la pubblicazione**.
 
-Valgono le regole di `~/projects/CLAUDE.md`. Qui solo le specifiche.
+Valgono le regole generali in `~/.dsh/AGENTS.md` (memoria globale, caricata in ogni
+sessione) e in `~/.dsh/memory/regole-progetti.md`. Qui solo le specifiche.
 
 ## Modalità di lavoro
 
@@ -84,3 +85,9 @@ altri blocchi, stati draft/published, tabella documenti generati.
 
 Regola: se durante lo sviluppo arriva un'idea, **non si implementa** — va in fondo
 alla lista idee.
+
+## Stato e roadmap (privati, fuori dal repo)
+
+Questo repo è pubblico: lo stato di avanzamento, la roadmap e le coordinate Notion
+**non** stanno qui. Sono in `~/.dsh/memory/project-document-studio.md` — leggerlo
+prima di riprendere il lavoro per sapere dove si era rimasti.
